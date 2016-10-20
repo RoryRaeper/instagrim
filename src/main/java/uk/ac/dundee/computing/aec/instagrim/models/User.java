@@ -27,7 +27,7 @@ public class User {
         
     }
     
-    public boolean RegisterUser(String username, String Password){
+    public boolean RegisterUser(String username, String Password, String fname, String sname){ //String telephone, String DoB, String email
         AeSimpleSHA1 sha1handler=  new AeSimpleSHA1();
         String EncodedPassword=null;
         try {
@@ -37,12 +37,12 @@ public class User {
             return false;
         }
         Session session = cluster.connect("instagrim");
-        PreparedStatement ps = session.prepare("insert into userprofiles (login,password) Values(?,?)");
+        PreparedStatement ps = session.prepare("insert into userprofiles (login,password,first_name,last_name) Values(?,?,?,?)");
        
         BoundStatement boundStatement = new BoundStatement(ps);
         session.execute( // this is where the query is executed
                 boundStatement.bind( // here you are binding the 'boundStatement'
-                        username,EncodedPassword));
+                        username,EncodedPassword,fname,sname));
         //We are assuming this always works.  Also a transaction would be good here !
         
         return true;
@@ -81,6 +81,45 @@ public class User {
     }
        public void setCluster(Cluster cluster) {
         this.cluster = cluster;
+    }
+       
+       
+       public String recieveuserinfo(String User, String datatype) {
+        String data=null;
+        Session session = cluster.connect("instagrim");
+        PreparedStatement ps = session.prepare("select " + datatype  + " from userprofiles where login =?");
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);        
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        User));
+        if (rs.isExhausted()) {
+            System.out.println("No data found on User");
+            return null;
+        } else {
+            for (Row row : rs) {
+                data = row.getString(datatype);
+            }
+        }
+        return data;
+    }
+       
+       public boolean userExists(String User) {
+        String data=null;
+        Session session = cluster.connect("instagrim");
+        PreparedStatement ps = session.prepare("select login from userprofiles where login =?");
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);        
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        User));
+        if (rs.isExhausted()) {
+            System.out.println("No data found on User");
+            return false;
+        } else {
+            System.out.println("Username already exists");
+            return true;
+        }
     }
 
     

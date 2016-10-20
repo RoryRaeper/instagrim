@@ -21,6 +21,33 @@
         <h2>Your world in Black and White</h2>
         </header>
         
+                <div class="nav">
+            <ul>
+                <li style="float:left; color:#999999">instaGrim</li>
+                <li><a href="/Instagrim">Home</a></li>
+                <li><a href="index.jsp">About</a></li>
+		<li><a href="upload.jsp">Upload</a></li>
+                    <%
+                        
+                        LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+                        if (lg != null) {
+                            String UserName = lg.getUsername();
+                            if (lg.getloggedin()) {
+                    %>
+
+                <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
+                    <%}
+                            }else{
+                                %>
+                <li><a class="active" href="register.jsp">Register</a></li>
+                <li><a href="login.jsp">Login</a></li>
+                <%
+                                        
+                            
+                    }%> 
+           </ul>
+        </div>
+        
         <nav>
             <ul>
                 <li class="nav"><a href="/Instagrim/upload.jsp">Upload</a></li>
@@ -35,6 +62,11 @@
             if (lsPics == null) {
         %>
         <p>No Pictures found</p>
+        <div class="mainbody">
+            <!--<div class="imagelayout">-->
+                <!--<ul>-->
+                <table style="width:100%">
+                    <tr>
         <%
         } else {
             Iterator<Pic> iterator;
@@ -43,11 +75,19 @@
                 Pic p = (Pic) iterator.next();
 
         %>
-        <a href="/Instagrim/Image/<%=p.getSUUID()%>" ><img src="/Instagrim/Thumb/<%=p.getSUUID()%>"></a><br/><%
+                    <!--<li>
+                        <a href="/Instagrim/Image/<%=p.getSUUID()%>" style="border: 0;"><img src="/Instagrim/Thumb/<%=p.getSUUID()%>"></a>
+                    </li>-->
+                    <td><a href="/Instagrim/Image/<%=p.getSUUID()%>" style="border: 0;"><img  style="border: 0" src="/Instagrim/Thumb/<%=p.getSUUID()%>"></a></td>
+                    <%
 
             }
             }
         %>
+                <!--</ul>-->
+                    </tr>
+                </table>
+        </div>
         </article>
         <footer>
             <ul>

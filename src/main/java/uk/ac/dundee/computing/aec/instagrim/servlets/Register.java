@@ -16,8 +16,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import uk.ac.dundee.computing.aec.instagrim.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrim.models.User;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 /**
  *
@@ -30,9 +34,13 @@ public class Register extends HttpServlet {
         // TODO Auto-generated method stub
         cluster = CassandraHosts.getCluster();
     }
+    
+      protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        RequestDispatcher rd = request.getRequestDispatcher("/register.jsp");
+        rd.forward(request, response);
 
-
-
+    }
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -47,14 +55,28 @@ public class Register extends HttpServlet {
             throws ServletException, IOException {
         String username=request.getParameter("username");
         String password=request.getParameter("password");
+        String fname=request.getParameter("fname");
+        String sname=request.getParameter("sname");
+        String email=request.getParameter("email");
+        String emailConf=request.getParameter("emailConf");
+        String telephone=request.getParameter("telephone");
+        String DoB=request.getParameter("DoB");
+        
         
         User us=new User();
         us.setCluster(cluster);
-        us.RegisterUser(username, password);
-        
-	response.sendRedirect("/Instagrim");
+        Boolean NameInUse = us.userExists(username);
+        if(NameInUse == true){
+            System.out.println("Sorry, this username is already in use.");
+            response.sendRedirect("/Instagrim/Register");           
+        }
+        else{
+            us.RegisterUser(username, password, fname, sname); //, telephone, DoB,email
+            response.sendRedirect("/Instagrim");
+        }
         
     }
+
 
     /**
      * Returns a short description of the servlet.
