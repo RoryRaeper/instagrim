@@ -1,47 +1,43 @@
 <%-- 
     Document   : register.jsp
     Created on : Sep 28, 2014, 6:29:51 PM
-    Author     : Administrator
+    Author     : R.Raeper
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<%@page import="uk.ac.dundee.computing.aec.instagrim.stores.*" %>
+<%@page import="uk.ac.dundee.computing.rjr.instagrim.stores.*" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Instagrim</title>
-        <link rel="stylesheet" type="text/css" href="Styles.css" />
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/Styles.css" />
     </head>
     <body>
         <div class="nav">
             <ul>
                 <li style="float:left; color:#999999">instaGrim</li>
                 <li><a href="/Instagrim">Home</a></li>
-                <li><a href="index.jsp">About</a></li>
-		<li><a href="upload.jsp">Upload</a></li>
-                    <%
-                        
+                <li><a href="/Instagrim/Search">Search</a></li>
+		<li><a href="/Instagrim/Upload">Upload</a></li>
+                    <%  
                         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+                        System.out.println("LOGGED IN? " + lg);
                         if (lg != null) {
                             String UserName = lg.getUsername();
                             if (lg.getloggedin()) {
+                                System.out.println("LOGGED IN? " + lg.getloggedin());
                     %>
 
                 <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Images</a></li>
-                <li><a method="POST"  action="Logout">Logout</a></li>
-                <div class = "Profile"><li><a href="Profile.jsp">Profile</a></li></div>
-                    <%}
-                            }else{
-                                %>
-                <li><a class="active" href="register.jsp">Register</a></li>
-                <li><a href="login.jsp">Login</a></li>
+                <li><a href="/Instagrim/Logout" method="POST"  action="Logout">Logout</a></li>
+                <div class = "Profile"><li><a href="/Instagrim/Profile"><%=UserName%></a></li></div> 
+                    <%}}else{%>
+                <li><a class = "active" href="/Instagrim/Register">Register</a></li>
+                <li><a href="/Instagrim/Login">Login</a></li>
                 <li style="float:right;color:white;">instaGrim</li>
-                <%
-                                        
-                            
-                    }%> 
+                <%}%> 
            </ul>
         </div>
            <br><br><br>
@@ -49,14 +45,7 @@
            
         <div class="mainbody">
                    
-        <div class="regpage">
-        <!--<nav>
-            <ul>
-                
-                <li><a href="/Instagrim/Images/majed">Sample Images</a></li>
-            </ul>
-        </nav>-->
-       
+        <div class="regpage">       
         <article>
             
             <h3 style='text-align: center'>Register as user</h3>
@@ -83,7 +72,7 @@
                                     </tr>
                                     <tr>
                                         <td>Telephone:</td>
-                                        <td><input type="tel" name="tel" id="tel"> <!--pattern='[\+]\d{2}[\(]\d{2}[\)]\d{4}[\-]\d{4}'title='Phone Number (Format: +99(99)9999-9999)'--></td>
+                                        <td><input type="tel" name="tel" id="tel" pattern='^\s*\(?(020[7,8]{1}\)?[ ]?[1-9]{1}[0-9{2}[ ]?[0-9]{4})|(0[1-8]{1}[0-9]{3}\)?[ ]?[1-9]{1}[0-9]{2}[ ]?[0-9]{3})\s*$'></td>
                                         <td>Date of Birth:</td>
                                         <td><input type="date" name="DoB" min="1900-01-01" required></td>
                                     </tr>
@@ -93,13 +82,22 @@
                                 <input type="submit" value="Register">
                                 </div>
                             </form>
+            
+            
+                <%String temp = (String)session.getAttribute("RegistrationError");
+                if(temp.equals("EmailsDontMatch")){%>
+                    <br><br><div style="color:red;">Emails don't match, Please Try Again.</div>
+                <%}else if(temp.equals("UsernameConflict")){%>
+                    <br><br><div style="color:red;">Username is already in use, Please Try Again.</div>
+                <%}else{}%>
+                
+                
             </div>
         </article>
         </div>
-        <footer>
-            <ul>
-                <li class="footer"><a href="/Instagrim">Home</a></li>
-            </ul>
+                <footer>
+            <h2>&COPY; Andy C</h2>
+            <h3>Edited by Rory R</h3>
         </footer>
     </body>
 </html>

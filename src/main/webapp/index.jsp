@@ -6,12 +6,12 @@
 
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="uk.ac.dundee.computing.aec.instagrim.stores.*" %>
+<%@page import="uk.ac.dundee.computing.rjr.instagrim.stores.*" %>
 <!DOCTYPE html>
 <html>
     <head>
         <title>Instagrim</title>
-        <link rel="stylesheet" type="text/css" href="Styles.css" />
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/Styles.css" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
@@ -24,29 +24,25 @@
             <ul>
                 <li style="float:left; color:#999999">instaGrim</li>
                 <li><a class = "active" href="/Instagrim">Home</a></li>
-                <li><a href="index.jsp">About</a></li>
+                <li><a href="/Instagrim/Search">Search</a></li>
 		<li><a href="/Instagrim/Upload">Upload</a></li>
-                    <%
-                        
+                    <%  
                         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+                        System.out.println("LOGGED IN? " + lg);
                         if (lg != null) {
                             String UserName = lg.getUsername();
                             if (lg.getloggedin()) {
+                                System.out.println("LOGGED IN? " + lg.getloggedin());
                     %>
 
                 <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Images</a></li>
-                <li><a method="POST"  action="Logout">Logout</a></li>
-                <div class = "Profile"><li><a href="/Instagrim/Profile"><%=UserName%></a></li></div> <!-- maybe add Profile/"USERNAME" -->
-                    <%}
-                            }else{
-                                %>
+                <li><a href="/Instagrim/Logout" method="POST"  action="Logout">Logout</a></li>
+                <div class = "Profile"><li><a href="/Instagrim/Profile"><%=UserName%></a></li></div> 
+                    <%}}else{%>
                 <li><a href="/Instagrim/Register">Register</a></li>
                 <li><a href="/Instagrim/Login">Login</a></li>
                 <li style="float:right;color:white;">instaGrim</li>
-                <%
-                                        
-                            
-                    }%> 
+                <%}%> 
            </ul>
         </div>
       
@@ -58,7 +54,7 @@
         
         <footer>
             <h2>&COPY; Andy C</h2>
-            <h3>Rory R</h3>
+            <h3>Edited by Rory R</h3>
         </footer>
     </body>
 </html>

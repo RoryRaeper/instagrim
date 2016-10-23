@@ -5,51 +5,43 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="uk.ac.dundee.computing.aec.instagrim.stores.*" %>
+<%@page import="uk.ac.dundee.computing.rjr.instagrim.stores.*" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Instagrim</title>
-        <link rel="stylesheet" type="text/css" href="Styles.css" />
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/Styles.css" />
     </head>
     
     <div class="nav">
             <ul>
                 <li style="float:left; color:#999999">instaGrim</li>
                 <li><a href="/Instagrim">Home</a></li>
-                <li><a href="index.jsp">About</a></li>
-		<li><a class="active" href="upload.jsp">Upload</a></li>
-                    <%
-                        
+                <li><a href="/Instagrim/Search">Search</a></li>
+		<li><a class = "active" href="/Instagrim/Upload">Upload</a></li>
+                    <%  
                         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+                        System.out.println("LOGGED IN? " + lg);
                         if (lg != null) {
                             String UserName = lg.getUsername();
                             if (lg.getloggedin()) {
+                                System.out.println("LOGGED IN? " + lg.getloggedin());
                     %>
 
-                <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
-                    <%}
-                            }else{
-                                %>
-                <li><a href="register.jsp">Register</a></li>
-                <li><a href="login.jsp">Login</a></li>
-                <%
-                                        
-                            
-                    }%> 
+                <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Images</a></li>
+                <li><a href="/Instagrim/Logout" method="POST"  action="Logout">Logout</a></li>
+                <div class = "Profile"><li><a href="/Instagrim/Profile"><%=UserName%></a></li></div> 
+                    <%}}else{%>
+                <li><a href="/Instagrim/Register">Register</a></li>
+                <li><a href="/Instagrim/Login">Login</a></li>
+                <li style="float:right;color:white;">instaGrim</li>
+                <%}%> 
            </ul>
         </div>
            
     <body>
-        <h1>InstaGrim ! </h1>
-        <h2>Your world in Black and White</h2>
-        <nav>
-            <ul>
-                <li class="nav"><a href="upload.jsp">Upload</a></li>
-                <li class="nav"><a href="/Instagrim/Images/majed">Sample Images</a></li>
-            </ul>
-        </nav>
+        <br><br><br>
  
         <article>
             <div class="mainbody">
@@ -63,10 +55,9 @@
             </div>
 
         </article>
-        <footer>
-            <ul>
-                <li class="footer"><a href="/Instagrim">Home</a></li>
-            </ul>
+                <footer>
+            <h2>&COPY; Andy C</h2>
+            <h3>Edited by Rory R</h3>
         </footer>
     </body>
 </html>

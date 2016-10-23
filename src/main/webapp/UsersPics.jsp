@@ -1,50 +1,42 @@
 <%-- 
     Document   : UsersPics
     Created on : Sep 24, 2014, 2:52:48 PM
-    Author     : Administrator
+    Author     : R.Raeper
 --%>
 
 <%@page import="java.util.*"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="uk.ac.dundee.computing.aec.instagrim.stores.*" %>
+<%@ page import="uk.ac.dundee.computing.rjr.instagrim.stores.*" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Instagrim</title>
-        <link rel="stylesheet" type="text/css" href="/Instagrim/Styles.css" />
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/Styles.css" />
     </head>
-    <body>
-        <header>
-        
-        <h1>InstaGrim ! </h1>
-        <h2>Your world in Black and White</h2>
-        </header>
-        
-                <div class="nav">
+    <div class="nav">
             <ul>
                 <li style="float:left; color:#999999">instaGrim</li>
                 <li><a href="/Instagrim">Home</a></li>
-                <li><a href="index.jsp">About</a></li>
-		<li><a href="upload.jsp">Upload</a></li>
-                    <%
-                        
+                <li><a href="/Instagrim/Search">Search</a></li>
+		<li><a href="/Instagrim/Upload">Upload</a></li>
+                    <%  
                         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+                        System.out.println("LOGGED IN? " + lg);
                         if (lg != null) {
                             String UserName = lg.getUsername();
                             if (lg.getloggedin()) {
+                                System.out.println("LOGGED IN? " + lg.getloggedin());
                     %>
 
-                <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
-                    <%}
-                            }else{
-                                %>
-                <li><a class="active" href="register.jsp">Register</a></li>
-                <li><a href="login.jsp">Login</a></li>
-                <%
-                                        
-                            
-                    }%> 
+                <li><a class = "active" href="/Instagrim/Images/<%=lg.getUsername()%>">Images</a></li>
+                <li><a href="/Instagrim/Logout" method="POST"  action="Logout">Logout</a></li>
+                <div class = "Profile"><li><a href="/Instagrim/Profile"><%=UserName%></a></li></div> 
+                    <%}}else{%>
+                <li><a href="/Instagrim/Register">Register</a></li>
+                <li><a href="/Instagrim/Login">Login</a></li>
+                <li style="float:right;color:white;">instaGrim</li>
+                <%}%> 
            </ul>
         </div>
         
@@ -54,45 +46,29 @@
                 <li class="nav"><a href="/Instagrim/Images/majed">Sample Images</a></li>
             </ul>
         </nav>
- 
-        <article>
-            <h1>Your Pics</h1>
-        <%
-            java.util.LinkedList<Pic> lsPics = (java.util.LinkedList<Pic>) request.getAttribute("Pics");
-            if (lsPics == null) {
-        %>
+        <h1>Your Pics</h1>
+        <%java.util.LinkedList<Pic> lsPics = (java.util.LinkedList<Pic>) request.getAttribute("Pics");
+            if (lsPics == null) {%>
         <p>No Pictures found</p>
         <div class="mainbody">
-            <!--<div class="imagelayout">-->
-                <!--<ul>-->
-                <table style="width:100%">
-                    <tr>
-        <%
-        } else {
+            <table style="width:100%;margin:0;">
+        <%} else {
             Iterator<Pic> iterator;
             iterator = lsPics.iterator();
             while (iterator.hasNext()) {
-                Pic p = (Pic) iterator.next();
-
-        %>
-                    <!--<li>
-                        <a href="/Instagrim/Image/<%=p.getSUUID()%>" style="border: 0;"><img src="/Instagrim/Thumb/<%=p.getSUUID()%>"></a>
-                    </li>-->
-                    <td><a href="/Instagrim/Image/<%=p.getSUUID()%>" style="border: 0;"><img  style="border: 0" src="/Instagrim/Thumb/<%=p.getSUUID()%>"></a></td>
-                    <%
-
-            }
-            }
-        %>
-                <!--</ul>-->
+                Pic p = (Pic) iterator.next();%>
+                    <tr>
+                        <td><a href="/Instagrim/Image/<%=p.getSUUID()%>" style="border: 0;"><img  style="border: 0" src="/Instagrim/Thumb/<%=p.getSUUID()%>"></a><a href="/Instagrim/Comments/<%=p.getSUUID()%>/">Click to view comments.</a></td>
+                        <!--<td><a href="/Instagrim/Comments/<%=p.getSUUID()%>/">Click to view comments.</a></td>-->
                     </tr>
-                </table>
+                    <%}
+            }%>
+            </table>
         </div>
-        </article>
-        <footer>
-            <ul>
-                <li class="footer"><a href="/Instagrim">Home</a></li>
-            </ul>
+            <br><br>
+                <footer>
+            <h2>&COPY; Andy C</h2>
+            <h3>Edited by Rory R</h3>
         </footer>
     </body>
 </html>

@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="uk.ac.dundee.computing.aec.instagrim.stores.*" %>
+<%@page import="uk.ac.dundee.computing.rjr.instagrim.stores.*" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,57 +20,59 @@
             <ul>
                 <li style="float:left; color:#999999">instaGrim</li>
                 <li><a href="/Instagrim">Home</a></li>
-                <li><a href="index.jsp">About</a></li>
-		<li><a href="upload.jsp">Upload</a></li>
-                    <%
-                        
+                <li><a href="/Instagrim/Search">Search</a></li>
+		<li><a href="/Instagrim/Upload">Upload</a></li>
+                    <%  
                         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+                        System.out.println("LOGGED IN? " + lg);
                         if (lg != null) {
                             String UserName = lg.getUsername();
                             if (lg.getloggedin()) {
+                                System.out.println("LOGGED IN? " + lg.getloggedin());
                     %>
 
-                <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
-                    <%}
-                            }else{
-                                %>
-                <li><a href="register.jsp">Register</a></li>
-                <li><a class="active" href="login.jsp">Login</a></li>
-                <%
-                                        
-                            
-                    }%> 
+                <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Images</a></li>
+                <li><a href="/Instagrim/Logout" method="POST"  action="Logout">Logout</a></li>
+                <div class = "Profile"><li><a href="/Instagrim/Profile"><%=UserName%></a></li></div> 
+                    <%}}else{%>
+                <li><a href="/Instagrim/Register">Register</a></li>
+                <li><a class = "active" href="/Instagrim/Login">Login</a></li>
+                <li style="float:right;color:white;">instaGrim</li>
+                <%}%> 
            </ul>
         </div>
            <br><br><br>
     <body>
-        <header>
-        <h1>InstaGrim ! </h1>
-        <h2>Your world in Black and White</h2>
-        </header>
-        <nav>
-            <ul>
-                
-                <li><a href="/Instagrim/Images/majed">Sample Images</a></li>
-            </ul>
-        </nav>
+        <div class='mainbody'>
+            <div class="regpage">
+        <h1>Enter your Username and password</h1>
+        <h2>If you don't have an account, please register <a href="/Instagrim/Register">here</a>.
        
+        <!--<div class='mainbody'>-->
         <article>
             <h3>Login</h3>
             <form method="POST"  action="Login">
-                <ul>
-                    <li>User Name <input type="text" name="username"></li>
-                    <li>Password <input type="password" name="password"></li>
+                <ul style='list-style:none;'>
+                    <li>User Name &nbsp;&nbsp;<input type="text" name="username"></li><br>
+                    <li>Password  &nbsp;&nbsp;&nbsp;&nbsp;<input type="password" name="password"></li>
                 </ul>
                 <br/>
                 <input type="submit" value="Login"> 
             </form>
-
+            
+            <%Boolean temp1 = (Boolean)session.getAttribute("validuser");
+                if(temp1==null){}
+                else if(temp1==false){%>
+                <br><br><div style="color:red;">Invalid Login, Please Try Again.</div>
+                <%}else{%>
+                <%}%>
+            
+            </div>
         </article>
+        </div>
         <footer>
-            <ul>
-                <li class="footer"><a href="/Instagrim">Home</a></li>
-            </ul>
+            <h2>&COPY; Andy C</h2>
+            <h3>Edited by Rory R</h3>
         </footer>
     </body>
 </html>
