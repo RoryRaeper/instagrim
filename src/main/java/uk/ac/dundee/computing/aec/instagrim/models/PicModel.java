@@ -36,6 +36,7 @@ import org.imgscalr.Scalr.Method;
 
 import uk.ac.dundee.computing.aec.instagrim.lib.*;
 import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
+import uk.ac.dundee.computing.aec.instagrim.stores.PicComments;
 //import uk.ac.dundee.computing.aec.stores.TweetStore;
 
 public class PicModel {
@@ -49,6 +50,40 @@ public class PicModel {
     public void setCluster(Cluster cluster) {
         this.cluster = cluster;
     }
+    
+    /*public void insertProfilePic(byte[] b, String type, String name, String user) {
+        try {
+            Convertors convertor = new Convertors();
+
+            String types[]=Convertors.SplitFiletype(type);
+            ByteBuffer buffer = ByteBuffer.wrap(b);
+            int length = b.length;
+            java.util.UUID picid = null;
+            picid=picid.fromString("ProfilePicture");            
+            //The following is a quick and dirty way of doing this, will fill the disk quickly !
+            Boolean success = (new File("/var/tmp/instagrim/Profile")).mkdirs();
+            FileOutputStream output = new FileOutputStream(new File("/var/tmp/instagrim/Profile" + picid));
+
+            output.write(b);
+            byte []  thumbb = picresize(picid.toString(),types[1]);
+            int thumblength= thumbb.length;
+            ByteBuffer thumbbuf=ByteBuffer.wrap(thumbb);
+            byte[] processedb = picdecolour(picid.toString(),types[1]);
+            ByteBuffer processedbuf=ByteBuffer.wrap(processedb);
+            int processedlength=processedb.length;
+            Session session = cluster.connect("instagrim");
+
+            PreparedStatement psInsertPic = session.prepare("insert into pics ( picid, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?)");
+            BoundStatement bsInsertPic = new BoundStatement(psInsertPic);
+
+            Date DateAdded = new Date();
+            session.execute(bsInsertPic.bind(picid, buffer, thumbbuf,processedbuf, user, DateAdded, length,thumblength,processedlength, type, name));
+            session.close();
+
+        } catch (IOException ex) {
+            System.out.println("Error --> " + ex);
+        }
+    }*/
 
     public void insertPic(byte[] b, String type, String name, String user) {
         try {
@@ -123,13 +158,13 @@ public class PicModel {
     public static BufferedImage createThumbnail(BufferedImage img) {
         img = resize(img, Method.SPEED, 250, OP_ANTIALIAS, OP_GRAYSCALE);
         // Let's add a little border before we return result.
-        return pad(img, 2);
+        return img;
     }
     
    public static BufferedImage createProcessed(BufferedImage img) {
         int Width=img.getWidth()-1;
         img = resize(img, Method.SPEED, Width, OP_ANTIALIAS, OP_GRAYSCALE);
-        return pad(img, 4);
+        return img;
     }
    
     public java.util.LinkedList<Pic> getPicsForUser(String User) {
@@ -212,5 +247,45 @@ public class PicModel {
         return p;
 
     }
-
+    
+    public void setComments(String User, java.util.UUID picid, String commenttext, Session session, java.util.UUID commentID) {
+            PreparedStatement ps = session.prepare("insert into piccomments ( picid, commenttext, user, comment_added, commentid) values(?,?,?,?,?)");
+            ResultSet rs = null;
+            BoundStatement boundStatement = new BoundStatement(ps);
+            Date DateAdded = new Date();
+            rs = session.execute( // this is where the query is executed
+                    boundStatement.bind(picid,commenttext,User,DateAdded,commentID));
+    }
+    
+    
+    
+    public java.util.LinkedList<PicComments> getCommentsforImage(java.util.UUID picid, Session session) {
+        System.out.println("IS IT EVEN GOING HERE?");
+        java.util.LinkedList<PicComments> PicComments = new java.util.LinkedList<>();
+        PreparedStatement ps = session.prepare("select commenttext,user,comment_added,commentid from piccomments where picid =?");
+        ResultSet rs = null;
+        String comment = null;
+        String user = null;
+        Date added = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute(boundStatement.bind(picid));
+        if (rs.isExhausted()) {
+            System.out.println("No Images returned");
+            return null;
+        } else {
+            for (Row row : rs) {
+                
+                System.out.println("Please work");
+                PicComments comments = new PicComments();
+                java.util.UUID UUID = row.getUUID("commentid");
+                comment = row.getString("commenttext");
+                user = row.getString("user");
+                added = row.getDate("comment_added");
+                comments.setPicComments(comment, user, added);
+                PicComments.add(comments);
+                System.out.println("THIS IS WORKING, COMMENT ADDED");
+            }
+        }
+        return PicComments;
+    }
 }
