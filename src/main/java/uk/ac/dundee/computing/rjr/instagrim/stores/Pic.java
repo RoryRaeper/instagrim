@@ -3,21 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package uk.ac.dundee.computing.aec.instagrim.stores;
+package uk.ac.dundee.computing.rjr.instagrim.stores;
 
 import com.datastax.driver.core.utils.Bytes;
 import java.nio.ByteBuffer;
 
 /**
  *
- * @author Administrator
+ * @author R.Raeper
  */
 public class Pic {
 
-    private ByteBuffer bImage = null;
-    private int length;
-    private String type;
-    private java.util.UUID UUID=null;
+    ByteBuffer bImage = null;
+    int length;
+    String type;
+    java.util.UUID UUID=null;
     
     public void Pic() {
 

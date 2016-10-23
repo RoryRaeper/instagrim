@@ -1,4 +1,4 @@
-package uk.ac.dundee.computing.aec.instagrim.lib;
+package uk.ac.dundee.computing.rjr.instagrim.lib;
 
 import com.datastax.driver.core.*;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * ********************************************************
  *
  *
- * @author administrator
+ * @author R.Raeper
  *
  * Hosts are 192.168.2.10 Seed for Vagrant hosts
  *
